@@ -22,8 +22,13 @@ def load_html_page(page: int) -> str | None:
 
 
 def scrape_and_reload():
-    from scrape import main as scrape_main
-
+    try:
+        from scrape import main as scrape_main
+    except ImportError as exc:  # handle missing deps on deployment
+        st.error(
+            f"缺少套件: {exc}. 請先安裝依賴，例如執行 `pip install -r requirements.txt`。"
+        )
+        return
     try:
         scrape_main()
     except Exception as exc:  # noqa: BLE001 - surface to UI
